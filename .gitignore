@@ -1,0 +1,13 @@
+# Visual Studio archivos temporales
+.vs/
+[Bb]in/
+[Oo]bj/
+*.user
+*.suo
+*.shellmnt
+*.visid
+
+# Angular archivos temporales
+node_modules/
+dist/
+.angular/
