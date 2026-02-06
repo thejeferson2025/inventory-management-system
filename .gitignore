@@ -1,4 +1,4 @@
-# Visual Studio archivos temporales
+# --- .NET (Backend) ---
 .vs/
 [Bb]in/
 [Oo]bj/
@@ -6,8 +6,18 @@
 *.suo
 *.shellmnt
 *.visid
+*.pdb
 
-# Angular archivos temporales
+# --- Angular (Frontend) ---
 node_modules/
 dist/
 .angular/
+.sass-cache/
+connect.lock
+coverage/
+lib/
+
+# --- Otros  ---
+.DS_Store
+Thumbs.db
+
