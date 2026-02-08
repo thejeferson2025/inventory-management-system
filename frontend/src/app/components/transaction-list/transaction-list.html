@@ -1,0 +1,88 @@
+<div class="list-container">
+
+  <mat-card class="elevation-card">
+    <mat-card-header>
+      <mat-card-title>Historial de Transacciones</mat-card-title>
+      <span class="spacer"></span>
+      <button mat-raised-button color="primary" (click)="openForm()">
+        <mat-icon>add</mat-icon> Registrar Transacción
+      </button>
+    </mat-card-header>
+
+    <mat-card-content>
+      <mat-form-field appearance="outline" class="filter-field">
+        <mat-label>Buscar por tipo o producto....</mat-label>
+        <mat-icon matPrefix>search</mat-icon>
+        <input matInput (keyup)="applyFilter($event)" #input>
+      </mat-form-field>
+
+      <div class="table-container">
+        <table mat-table [dataSource]="dataSource" matSort>
+
+          <ng-container matColumnDef="date">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha </th>
+            <td mat-cell *matCellDef="let row"> {{row.date | date:'dd/MM/yyyy HH:mm'}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="type">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo </th>
+            <td mat-cell *matCellDef="let row">
+              <span class="badge" [ngClass]="{'sale': row.type === 'Sale', 'purchase': row.type === 'Purchase'}">
+                {{ row.type === 'Sale' ? 'VENTA' : 'COMPRA' }}
+              </span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="productName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Producto </th>
+            <td mat-cell *matCellDef="let row">
+              <strong>{{ getProductName(row.productId) }}</strong>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="quantity">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Cantidad </th>
+            <td mat-cell *matCellDef="let row"> {{row.quantity}} uds. </td>
+          </ng-container>
+
+          <ng-container matColumnDef="unitPrice">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Precio Unitario </th>
+            <td mat-cell *matCellDef="let row"> {{row.unitPrice | currency}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="totalPrice">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Total </th>
+            <td mat-cell *matCellDef="let row"> {{row.totalPrice | currency}} </td>
+          </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef class="actions-col"> Acciones </th>
+          <td mat-cell *matCellDef="let row" class="actions-col">
+
+            <button mat-icon-button color="primary" (click)="showDetail(row)" matTooltip="Ver detalle">
+              <mat-icon>info</mat-icon>
+            </button>
+
+            <button mat-icon-button color="accent" (click)="editTransaction(row)" matTooltip="Editar Nota">
+              <mat-icon>edit</mat-icon>
+            </button>
+
+            <button mat-icon-button color="warn" (click)="deleteTransaction(row.id)" matTooltip="Eliminar">
+              <mat-icon>delete</mat-icon>
+            </button>
+
+          </td>
+        </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="6">No hay registros para "{{input.value}}"</td>
+          </tr>
+        </table>
+        <mat-paginator [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons></mat-paginator>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

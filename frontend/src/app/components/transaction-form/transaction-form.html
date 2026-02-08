@@ -1,0 +1,51 @@
+<div class="dialog-header">
+  <h2 mat-dialog-title>Registrar Transacción</h2>
+  <button mat-icon-button (click)="close()" tabindex="-1">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<mat-dialog-content class="custom-content">
+  <form [formGroup]="form" class="transaction-form">
+
+    <mat-form-field appearance="outline" class="full-width spacer-top">
+      <mat-label>Seleccionar Producto</mat-label>
+      <mat-select formControlName="productId">
+        <mat-option *ngFor="let prod of products" [value]="prod.id">
+          {{ prod.name }} (Stock actual: {{ prod.stock }})
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="form.get('productId')?.hasError('required')">Requerido</mat-error>
+    </mat-form-field>
+
+    <div class="row">
+      <mat-form-field appearance="outline" class="col">
+        <mat-label>Tipo de Movimiento</mat-label>
+        <mat-select formControlName="type">
+          <mat-option *ngFor="let t of types" [value]="t.value">
+            {{ t.viewValue }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="col">
+        <mat-label>Cantidad</mat-label>
+        <input matInput type="number" formControlName="quantity" min="1">
+        <mat-error *ngIf="form.get('quantity')?.hasError('min')">Mínimo 1</mat-error>
+      </mat-form-field>
+    </div>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Detalle (Opcional)</mat-label>
+      <textarea matInput formControlName="detail" rows="2"></textarea>
+    </mat-form-field>
+
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="close()">Cancelar</button>
+  <button mat-raised-button color="accent" (click)="save()" [disabled]="form.invalid">
+    <mat-icon>save</mat-icon> Registrar
+  </button>
+</mat-dialog-actions>

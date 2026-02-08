@@ -61,7 +61,7 @@ namespace Transactions.Services
                 throw new Exception("Tipo de transacción inválido. Use 'Sale' o 'Purchase'.");
             }
 
-            //  Crear la Transacción localmente
+            //  Crear Transacción 
             var transaction = new Transaction
             {
                 Id = Guid.NewGuid(),
@@ -102,9 +102,53 @@ namespace Transactions.Services
                 transaction.UnitPrice, transaction.TotalPrice, transaction.Detail
             );
         }
+   
+        public async Task<bool> UpdateAsync(Guid id, TransactionUpdateDto dto)
+        {
+            var transaction = await _context.Transactions.FindAsync(id);
+            if (transaction == null) return false;
+
+
+            var client = _httpClientFactory.CreateClient("ProductsClient");
+            var response = await client.GetAsync($"{dto.ProductId}");
+            
+            if (!response.IsSuccessStatusCode)
+                throw new Exception("No se pudo verificar el stock del producto.");
+
+            var content = await response.Content.ReadAsStringAsync();
+            var productInfo = JsonSerializer.Deserialize<ProductExternalDto>(content, _jsonOptions);
+
+            if (productInfo == null) throw new Exception("Error al leer datos del producto.");
+
+            if (dto.Type.Equals("Sale", StringComparison.OrdinalIgnoreCase))
+            {
+                if (productInfo.Stock < dto.Quantity)
+                    throw new Exception($"Stock insuficiente para esta edición. Disponible: {productInfo.Stock}");
+            }
+
+            transaction.ProductId = dto.ProductId;
+            transaction.Type = dto.Type;
+            transaction.Quantity = dto.Quantity;
+            transaction.Detail = dto.Detail;
+            transaction.TotalPrice = transaction.UnitPrice * dto.Quantity;
+
+            await _context.SaveChangesAsync(); 
+            return true;
+        }
+
+        public async Task<bool> DeleteAsync(Guid id)
+        {
+            var transaction = await _context.Transactions.FindAsync(id);
+            if (transaction == null) return false;
+
+            _context.Transactions.Remove(transaction);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+   
     }
 
-    public record ProductExternalDto(
+        public record ProductExternalDto(
         Guid Id, string Name, string Description, string Category, 
         string ImageUrl, decimal Price, int Stock
     );

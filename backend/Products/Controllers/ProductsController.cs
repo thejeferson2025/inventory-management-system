@@ -46,11 +46,18 @@ namespace Products.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(Guid id)
-        {
-            var deleted = await _service.DeleteAsync(id);
-            if (!deleted) return NotFound(new { message = "Producto no encontrado para eliminar" });
-            return NoContent();
-        }
+            public async Task<IActionResult> Delete(Guid id)
+            {
+                try 
+                {
+                    var deleted = await _service.DeleteAsync(id);
+                    if (!deleted) return NotFound(new { message = "Producto no encontrado." });
+                    return NoContent();
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(new { message = ex.Message });
+                }
+            }
     }
 }

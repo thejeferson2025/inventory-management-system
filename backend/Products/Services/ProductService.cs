@@ -51,8 +51,6 @@ namespace Products.Services
         {
             var existingProduct = await _context.Products.FindAsync(id);
             if (existingProduct == null) return false;
-
-            // Actualizamos campos
             existingProduct.Name = dto.Name;
             existingProduct.Description = dto.Description;
             existingProduct.Category = dto.Category;
@@ -64,14 +62,26 @@ namespace Products.Services
             return true;
         }
 
-        public async Task<bool> DeleteAsync(Guid id)
+      public async Task<bool> DeleteAsync(Guid id)
         {
             var product = await _context.Products.FindAsync(id);
             if (product == null) return false;
 
-            _context.Products.Remove(product);
-            await _context.SaveChangesAsync();
-            return true;
+            try 
+            {
+                _context.Products.Remove(product);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (DbUpdateException)
+            {
+                
+                throw new Exception("No se puede borrar el producto actual porque tiene transacciones registradas.");
+            }
+            catch (Exception)
+            {
+                throw new Exception("Ocurrió un error inesperado al eliminar el producto.");
+            }
         }
     }
 }

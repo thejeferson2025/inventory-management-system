@@ -19,4 +19,12 @@ namespace Transactions.Dtos
         decimal TotalPrice,
         string? Detail
     );
+
+
+    public record TransactionUpdateDto(
+        string Type,      
+        Guid ProductId,   
+        int Quantity,     
+        string? Detail
+    );
 }

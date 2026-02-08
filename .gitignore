@@ -1,23 +1,21 @@
 # --- .NET (Backend) ---
-.vs/
-[Bb]in/
-[Oo]bj/
+**/[Bb]in/
+**/[Oo]bj/
+**/.vs/
+backend/*/.vs/
 *.user
 *.suo
-*.shellmnt
-*.visid
 *.pdb
 
 # --- Angular (Frontend) ---
-node_modules/
-dist/
-.angular/
-.sass-cache/
-connect.lock
-coverage/
-lib/
+**/node_modules/
+**/dist/
+**/.angular/
+frontend/.angular/cache/
+frontend/tmp/
+frontend/out-tsc/
 
-# --- Otros  ---
+# --- Otros ---
 .DS_Store
 Thumbs.db
-
+*.log

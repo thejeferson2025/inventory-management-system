@@ -22,7 +22,6 @@ builder.Services.AddCors(options =>
 
 // Inyección de Dependencias
 builder.Services.AddScoped<IProductService, ProductService>();
-
 builder.Services.AddControllers();
 
 // Configuración de Swagger

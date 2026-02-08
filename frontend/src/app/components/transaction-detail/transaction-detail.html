@@ -1,0 +1,53 @@
+<h2 mat-dialog-title>Detalle de Transacción</h2>
+
+<mat-dialog-content>
+  <div class="detail-container">
+    <!-- <div class="detail-item full-width">
+      <span class="label">ID Transacción:</span>
+      <span class="value code">{{ data.transaction.id }}</span>
+    </div> -->
+    <div class="detail-item">
+      <span class="label">Producto:</span>
+      <span class="value highlight">{{ data.productName }}</span>
+    </div>
+
+    <div class="detail-item">
+      <span class="label">Tipo:</span>
+      <span class="value badge"
+            [class.sale]="data.transaction.type === 'Sale'"
+            [class.purchase]="data.transaction.type === 'Purchase'">
+        {{ data.transaction.type === 'Sale' ? 'VENTA' : 'COMPRA' }}
+      </span>
+    </div>
+
+    <div class="detail-item">
+      <span class="label">Cantidad:</span>
+      <span class="value">{{ data.transaction.quantity }} unidades</span>
+    </div>
+
+    <div class="detail-item">
+      <span class="label">Precio Unitario:</span>
+      <span class="value">{{ data.transaction.unitPrice | currency }}</span>
+    </div>
+
+    <div class="detail-item">
+      <span class="label">Total:</span>
+      <span class="value total">{{ data.transaction.totalPrice | currency }}</span>
+    </div>
+
+    <div class="detail-item">
+      <span class="label">Fecha:</span>
+      <span class="value">{{ data.transaction.date | date:'medium' }}</span>
+    </div>
+
+    <div class="detail-item full-width notes-box">
+      <span class="label">Notas / Detalle:</span>
+      <p class="value">{{ data.transaction.detail || 'Sin notas adicionales.' }}</p>
+    </div>
+
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-raised-button color="primary" mat-dialog-close>Cerrar</button>
+</mat-dialog-actions>

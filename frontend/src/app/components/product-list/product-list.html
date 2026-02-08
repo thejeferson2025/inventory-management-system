@@ -1,0 +1,77 @@
+<div class="list-container">
+
+  <mat-card class="elevation-card">
+    <mat-card-header>
+      <mat-card-title>Listado de Productos</mat-card-title>
+      <span class="spacer"></span>
+      <button mat-raised-button color="primary" (click)="openForm()">
+        <mat-icon>add</mat-icon> Nuevo Producto
+      </button>
+    </mat-card-header>
+
+    <mat-card-content>
+      <mat-form-field appearance="outline" class="filter-field">
+        <mat-label>Buscar un producto....</mat-label>
+        <mat-icon matPrefix>search</mat-icon>
+        <input matInput (keyup)="applyFilter($event)"  #input>
+      </mat-form-field>
+
+      <div class="table-container">
+        <table mat-table [dataSource]="dataSource" matSort>
+        <ng-container matColumnDef="image">
+                    <th mat-header-cell *matHeaderCellDef> Imagen </th>
+                    <td mat-cell *matCellDef="let row">
+                      <img [src]="row.imageUrl || 'assets/no-image.png'"
+                          alt="Producto"
+                          class="product-thumbnail"
+                          onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg'">
+                    </td>
+          </ng-container>
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Producto </th>
+            <td mat-cell *matCellDef="let row"> <strong>{{row.name}}</strong> </td>
+          </ng-container>
+
+          <ng-container matColumnDef="category">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Categoría </th>
+            <td mat-cell *matCellDef="let row"> {{row.category}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="price">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Precio Unitario </th>
+            <td mat-cell *matCellDef="let row"> {{row.price | currency}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="stock">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Stock </th>
+            <td mat-cell *matCellDef="let row">
+              <span [style.color]="row.stock < 5 ? 'red' : 'green'" style="font-weight: bold;">
+                {{row.stock}}
+              </span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef class="actions-col"> Acciones </th>
+            <td mat-cell *matCellDef="let row" class="actions-col">
+              <button mat-icon-button color="primary" (click)="openForm(row)" matTooltip="Editar">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="deleteProduct(row.id)" matTooltip="Eliminar">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="5">No hay datos para "{{input.value}}"</td>
+          </tr>
+        </table>
+        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

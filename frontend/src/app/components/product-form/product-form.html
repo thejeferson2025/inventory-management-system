@@ -1,0 +1,75 @@
+<div class="dialog-header">
+  <h2 mat-dialog-title>{{ isEditMode ? 'Editar Producto' : 'Nuevo Producto' }}</h2>
+  <button mat-icon-button (click)="close()" tabindex="-1">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<mat-dialog-content class="custom-content">
+  <form [formGroup]="form" class="product-form">
+
+    <div class="row spacer-top">
+      <mat-form-field appearance="outline" class="col">
+        <mat-label>Nombre</mat-label>
+        <input matInput formControlName="name">
+        <mat-error *ngIf="form.get('name')?.hasError('required')">Requerido</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="col">
+        <mat-label>Categoría</mat-label>
+        <mat-select formControlName="category">
+          <mat-option *ngFor="let cat of categories" [value]="cat">{{ cat }}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="form.get('category')?.hasError('required')">Requerido</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="row">
+      <mat-form-field appearance="outline" class="col">
+        <mat-label>Precio Unitario</mat-label>
+        <span matTextPrefix>$&nbsp;</span>
+        <input matInput type="number" formControlName="price">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="col">
+        <mat-label>Stock</mat-label>
+        <input matInput type="number" formControlName="stock">
+      </mat-form-field>
+    </div>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Descripción</mat-label>
+      <textarea matInput formControlName="description" rows="3"></textarea>
+    </mat-form-field>
+
+    <div class="image-upload-container">
+      <label class="image-label">Imagen del Producto</label>
+
+      <div class="upload-area">
+        <div class="preview-box" *ngIf="imagePreview">
+          <img [src]="imagePreview" alt="Vista previa">
+          <button type="button" class="remove-btn" (click)="imagePreview = null; form.patchValue({imageUrl: ''})">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+
+        <div class="upload-btn-wrapper" *ngIf="!imagePreview">
+          <button mat-stroked-button color="primary" type="button" (click)="fileInput.click()">
+            <mat-icon>cloud_upload</mat-icon> Subir Foto
+          </button>
+          <input #fileInput type="file" (change)="onFileSelected($event)" accept="image/*" style="display: none;">
+        </div>
+      </div>
+
+      <input type="hidden" formControlName="imageUrl">
+    </div>
+
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="close()">Cancelar</button>
+  <button mat-raised-button color="primary" (click)="save()" [disabled]="form.invalid">
+    {{ isEditMode ? 'Actualizar' : 'Guardar' }}
+  </button>
+</mat-dialog-actions>

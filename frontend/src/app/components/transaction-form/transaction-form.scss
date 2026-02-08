@@ -1,0 +1,40 @@
+
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 24px;
+  margin-bottom: 10px;
+}
+
+.dialog-header h2 { margin: 0; }
+
+
+.custom-content {
+  overflow-y: auto;
+  padding-bottom: 20px;
+}
+
+.transaction-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 400px;
+}
+
+.spacer-top { margin-top: 8px; }
+
+.row {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+}
+
+.col { flex: 1; }
+.full-width { width: 100%; }
+
+
+@media (max-width: 600px) {
+  .row { flex-direction: column; gap: 0; }
+  .transaction-form { min-width: 100%; }
+}

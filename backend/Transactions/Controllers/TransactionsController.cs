@@ -36,5 +36,25 @@ namespace Transactions.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
+   
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(Guid id, TransactionUpdateDto dto)
+        {
+            var updated = await _service.UpdateAsync(id, dto);
+            if (!updated) return NotFound(new { message = "Transacción no encontrada" });
+            return NoContent();
+        }
+
+     
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var deleted = await _service.DeleteAsync(id);
+            if (!deleted) return NotFound(new { message = "Transacción no encontrada para eliminar" });
+            return NoContent();
+        }
+   
+   
+   
     }
 }

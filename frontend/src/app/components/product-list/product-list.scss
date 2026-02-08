@@ -1,0 +1,61 @@
+
+.list-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+
+.elevation-card {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+
+mat-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+mat-card-content {
+  padding: 24px;
+}
+
+
+table {
+  width: 100%;
+}
+
+.actions-col {
+  text-align: right;
+  white-space: nowrap;
+}
+
+
+.filter-field {
+  width: 100%;
+  font-size: 14px;
+}
+
+.product-thumbnail {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  display: block;
+}
+
+.mat-column-image {
+  width: 100px; 
+  padding-right: 16px;
+}
