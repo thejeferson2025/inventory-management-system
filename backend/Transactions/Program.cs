@@ -17,28 +17,32 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Configuración del Cliente HTTP para comunicarse con Products
+// Configuración del Cliente HTTP
 builder.Services.AddHttpClient("ProductsClient", client =>
 {
-    client.BaseAddress = new Uri("http://localhost:5022/api/products/"); 
+    var productsUrl = builder.Configuration["Services:ProductsUrl"];
+    if (!string.IsNullOrEmpty(productsUrl))
+    {
+        client.BaseAddress = new Uri(productsUrl);
+    }
 });
 
-//  Inyección de Dependencias del Servicio de Transacciones
+// Inyección de Dependencias
 builder.Services.AddScoped<ITransactionService, TransactionService>();
-
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Pipeline
+// Pipeline HTTP
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
+app.UseHttpsRedirection();
 app.UseCors("AllowAll"); 
 app.UseAuthorization();
 app.MapControllers();

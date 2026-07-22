@@ -6,6 +6,8 @@ backend/*/.vs/
 *.user
 *.suo
 *.pdb
+appsettings.Development.json
+**/appsettings.Development.json
 
 # --- Angular (Frontend) ---
 **/node_modules/
