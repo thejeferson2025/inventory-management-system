@@ -8,6 +8,17 @@ El sistema aplica una separación de responsabilidades mediante servicios indepe
 1.  **Products Microservice (Puerto 5022):** Gestiona el catálogo maestro de productos, incluyendo la persistencia de imágenes en Base64 y el control de existencias.
 2.  **Transactions Microservice (Puerto 5235):**  Registra movimientos de inventario. Este servicio utiliza una **comunicación síncrona vía HTTP** para validar y actualizar el stock en el Microservicio de Productos en tiempo real.
 
+## 🏗️ Diagrama de Arquitectura
+
+```mermaid
+graph TD
+    A[Angular 21 UI] -->|HTTP 5022| B(Products API)
+    A -->|HTTP 5235| C(Transactions API)
+    C -->|HTTP Sync| B
+    B --> D[(InventoryDB)]
+    C --> D
+```
+
 ## 📋 Requisitos Previos
 
 Para ejecutar este proyecto necesitas:
@@ -33,7 +44,7 @@ En **ambos archivos**, localiza la sección `ConnectionStrings` y modifica los v
 
 ```json
 "ConnectionStrings": {
-  "DefaultConnection": "Server=TU_SERVIDOR_SQL; Database=WorkManagementDB; User Id=TU_USUARIO; Password=TU_PASSWORD; TrustServerCertificate=True;"
+  "DefaultConnection": "Server=TU_SERVIDOR_SQL; Database=InventoryDB; User Id=TU_USUARIO; Password=TU_PASSWORD; TrustServerCertificate=True;"
 }
 ```
 ## 🛠️ Ejecución del Proyecto

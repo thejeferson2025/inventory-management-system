@@ -20,7 +20,7 @@ builder.Services.AddCors(options =>
 // Configuración del Cliente HTTP
 builder.Services.AddHttpClient("ProductsClient", client =>
 {
-    var productsUrl = builder.Configuration["Services:ProductsUrl"];
+    var productsUrl = builder.Configuration["ProductsUrl"];
     if (!string.IsNullOrEmpty(productsUrl))
     {
         client.BaseAddress = new Uri(productsUrl);
@@ -46,5 +46,14 @@ app.UseHttpsRedirection();
 app.UseCors("AllowAll"); 
 app.UseAuthorization();
 app.MapControllers();
+
+// ----------------------------------------------------
+// NUEVO: Crear la base de datos y tablas si no existen
+// ----------------------------------------------------
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<TransactionDbContext>();
+    dbContext.Database.EnsureCreated();
+}
 
 app.Run();

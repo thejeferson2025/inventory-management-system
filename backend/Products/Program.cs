@@ -4,7 +4,6 @@ using Products.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 // Configuración de Base de Datos
 builder.Services.AddDbContext<ProductDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -30,7 +29,6 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -42,5 +40,14 @@ app.UseHttpsRedirection();
 app.UseCors("AllowAll");
 app.UseAuthorization(); 
 app.MapControllers(); 
+
+// ----------------------------------------------------
+// NUEVO: Crear la base de datos y tablas si no existen
+// ----------------------------------------------------
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<ProductDbContext>();
+    dbContext.Database.EnsureCreated(); 
+}
 
 app.Run();

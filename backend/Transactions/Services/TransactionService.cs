@@ -29,7 +29,6 @@ namespace Transactions.Services
 
         public async Task<TransactionResponseDto> CreateAsync(TransactionCreateDto dto)
         {
-            
             var client = _httpClientFactory.CreateClient("ProductsClient");
 
             var response = await client.GetAsync($"{dto.ProductId}");
@@ -42,7 +41,7 @@ namespace Transactions.Services
 
             if (productInfo == null) throw new Exception("Error al leer datos del producto.");
 
-            //  Validaciones de Negocio
+            // Validaciones de Negocio
             int newStock = productInfo.Stock;
 
             if (dto.Type.Equals("Sale", StringComparison.OrdinalIgnoreCase))
@@ -61,7 +60,26 @@ namespace Transactions.Services
                 throw new Exception("Tipo de transacción inválido. Use 'Sale' o 'Purchase'.");
             }
 
-            //  Crear Transacción 
+            // 1. Preparamos el DTO para actualizar el stock en Products
+            var updateDto = new
+            {
+                Name = productInfo.Name,
+                Description = productInfo.Description,
+                Category = productInfo.Category,
+                ImageUrl = productInfo.ImageUrl,
+                Price = productInfo.Price,
+                Stock = newStock 
+            };
+
+            // 2. HACEMOS LA LLAMADA HTTP PRIMERO
+            var updateResponse = await client.PutAsJsonAsync($"{dto.ProductId}", updateDto);
+
+            if (!updateResponse.IsSuccessStatusCode)
+            {
+                throw new Exception("Error al actualizar el stock en el servicio de productos. Transacción cancelada.");
+            }
+
+            // 3. SI LA LLAMADA FUE EXITOSA, GUARDAMOS LA TRANSACCIÓN LOCALMENTE
             var transaction = new Transaction
             {
                 Id = Guid.NewGuid(),
@@ -77,32 +95,12 @@ namespace Transactions.Services
             _context.Transactions.Add(transaction);
             await _context.SaveChangesAsync();
 
-            // llamaada sincronica
-            var updateDto = new
-            {
-                Name = productInfo.Name,
-                Description = productInfo.Description,
-                Category = productInfo.Category,
-                ImageUrl = productInfo.ImageUrl,
-                Price = productInfo.Price,
-                Stock = newStock 
-            };
-
-            var updateResponse = await client.PutAsJsonAsync($"{dto.ProductId}", updateDto);
-
-            if (!updateResponse.IsSuccessStatusCode)
-            {
-
-                throw new Exception("Error al actualizar el stock en el servicio de productos.");
-            }
-
             return new TransactionResponseDto(
                 transaction.Id, transaction.Date, transaction.Type, 
                 transaction.ProductId, transaction.Quantity, 
                 transaction.UnitPrice, transaction.TotalPrice, transaction.Detail
             );
         }
-   
         public async Task<bool> UpdateAsync(Guid id, TransactionUpdateDto dto)
         {
             var transaction = await _context.Transactions.FindAsync(id);
