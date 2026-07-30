@@ -32,7 +32,7 @@ export class ProductFormComponent implements OnInit {
   isEditMode = false;
   imagePreview: string | null = null;
 
-  categories = ['Electrónica', 'Hogar', 'Accesorios', 'Ropa', 'Otros'];
+  categories = ['Electrónica', 'Alimentos', 'Hogar', 'Accesorios', 'Ropa', 'Otros'];
 
   private fb = inject(FormBuilder);
   private productService = inject(ProductService);
