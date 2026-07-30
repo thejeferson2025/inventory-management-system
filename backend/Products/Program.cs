@@ -41,9 +41,7 @@ app.UseCors("AllowAll");
 app.UseAuthorization(); 
 app.MapControllers(); 
 
-// ----------------------------------------------------
-// NUEVO: Crear la base de datos y tablas si no existen
-// ----------------------------------------------------
+
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<ProductDbContext>();

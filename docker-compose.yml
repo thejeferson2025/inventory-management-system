@@ -1,19 +1,21 @@
 services:
-  # 1. Base de Datos SQL Server
+  # Base de Datos SQL Server
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
     ports:
       - "14333:1433"
+    volumes:
+      - sql_data:/var/opt/mssql 
     environment:
       - ACCEPT_EULA=Y
-      - MSSQL_SA_PASSWORD=El2026Admin.- # Cambia esto por una contraseña fuerte
+      - MSSQL_SA_PASSWORD=El2026Admin.- 
     
-  # 2. Microservicio de Products
+  # Microservicio de Products
   products-api:
     build: 
       context: ./backend/Products
     ports:
-      - "5022:8080" # Mapea tu puerto 5022 al 8080 del contenedor
+      - "5022:8080" 
     depends_on:
       - sqlserver
     restart: on-failure
@@ -21,12 +23,12 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=ProductsDB;User Id=sa;Password=El2026Admin.-;TrustServerCertificate=True;
 
-  # 3. Microservicio de Transactions
+  # Microservicio de Transactions
   transactions-api:
     build: 
       context: ./backend/Transactions
     ports:
-      - "5235:8080" # Mapea tu puerto 5235 al 8080 del contenedor
+      - "5235:8080" 
     depends_on:
       - sqlserver
       - products-api
@@ -36,7 +38,7 @@ services:
       - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=TransactionsDB;User Id=sa;Password=El2026Admin.-;TrustServerCertificate=True;
       - ProductsUrl=http://products-api:8080/api/products/
 
-  # 4. Frontend Angular
+  # Frontend Angular
   angular-ui:
     build:
       context: ./frontend
@@ -45,3 +47,6 @@ services:
     depends_on:
       - products-api
       - transactions-api
+    
+volumes:
+  sql_data:

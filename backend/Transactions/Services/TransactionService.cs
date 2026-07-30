@@ -41,7 +41,6 @@ namespace Transactions.Services
 
             if (productInfo == null) throw new Exception("Error al leer datos del producto.");
 
-            // Validaciones de Negocio
             int newStock = productInfo.Stock;
 
             if (dto.Type.Equals("Sale", StringComparison.OrdinalIgnoreCase))
@@ -60,7 +59,6 @@ namespace Transactions.Services
                 throw new Exception("Tipo de transacción inválido. Use 'Sale' o 'Purchase'.");
             }
 
-            // 1. Preparamos el DTO para actualizar el stock en Products
             var updateDto = new
             {
                 Name = productInfo.Name,
@@ -71,7 +69,6 @@ namespace Transactions.Services
                 Stock = newStock 
             };
 
-            // 2. HACEMOS LA LLAMADA HTTP PRIMERO
             var updateResponse = await client.PutAsJsonAsync($"{dto.ProductId}", updateDto);
 
             if (!updateResponse.IsSuccessStatusCode)
@@ -79,7 +76,6 @@ namespace Transactions.Services
                 throw new Exception("Error al actualizar el stock en el servicio de productos. Transacción cancelada.");
             }
 
-            // 3. SI LA LLAMADA FUE EXITOSA, GUARDAMOS LA TRANSACCIÓN LOCALMENTE
             var transaction = new Transaction
             {
                 Id = Guid.NewGuid(),
